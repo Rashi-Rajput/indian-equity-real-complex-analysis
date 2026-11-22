@@ -1,0 +1,303 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[margin=25mm]{geometry}
+\usepackage{graphicx,amsmath,amssymb,booktabs,xcolor,hyperref}
+\definecolor{ink}{RGB}{28,76,83}
+\hypersetup{colorlinks=true,linkcolor=ink,citecolor=ink,urlcolor=ink,pdftitle={Real and Complex Analysis of Indian Equity Prices}}
+\setlength{\emergencystretch}{1em}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{7pt}
+\setcounter{tocdepth}{2}
+\renewcommand{\arraystretch}{1.25}
+\graphicspath{{outputs/plots/}{figures/}}
+\newcommand{\fig}[2]{\begin{center}\includegraphics[width=\linewidth,height=.39\textheight,keepaspectratio]{#1}\par\refstepcounter{figure}{\small\itshape Figure \thefigure: #2}\end{center}}
+\newcommand{\topic}[1]{\clearpage\subsection{#1}}
+\newcommand{\chapterpage}[1]{\clearpage\section{#1}}
+\newcommand{\out}[1]{\par\medskip{\color{ink}\bfseries #1}\par}
+\begin{document}
+\thispagestyle{empty}
+\vspace*{16mm}
+{\color{ink}\large Mathematics project report}\par\vspace{9mm}
+{\Huge\bfseries Real and Complex Analysis of Indian Equity Prices\par}
+\vspace{4mm}{\Large Price variation, tail risk and option valuation}\par\vspace{5mm}
+\textcolor{ink}{\rule{\linewidth}{1.1pt}}
+\bigskip
+The Nifty 50 rose by 47.51\% across the sample. That figure compares two closing levels. It leaves out the 584 sessions on which the index fell and tells us little about the size of those falls. This report follows those daily changes through three calculations: the distance a price travels, the size of losses in its lower tail, and the value of a European option under a stated model.
+\vfill
+{\large Reliance Industries, TCS, Infosys, HDFC Bank and the Nifty 50}\par
+Daily observations from 22 November 2021 to 20 November 2026\par
+\clearpage
+{\small\setlength{\parskip}{0pt}\tableofcontents}
+\chapterpage{Introduction}
+This study examines daily closing prices for four Indian equities and the Nifty 50 between November 2021 and November 2026. Its purpose is to determine how the choice of a mathematical measure affects the description of market behaviour. A period return records the change between two dates. Total variation also accounts for reversals between those dates, while tail measures describe the frequency threshold and severity of large losses.
+
+Reliance Industries illustrates the distinction. Its adjusted closing price increased from 1,070.58 to 1,364.60 over the study period, yet the sum of its daily increases exceeded 8,200 rupees. Much of that movement was offset by subsequent declines. This observation motivates a comparison of net change, cumulative movement and downside risk on a common set of trading dates.
+
+Real analysis supplies the first tools for this problem. Variation measures movement along a path. Integration lets us add many small contributions and describe the average size of a loss beyond a cutoff. Complex analysis enters when we use a characteristic function to describe a return distribution. The same idea also gives a second way to price a European call under a specified model.
+ 
+The four shares provide a comparison with an index measured over exactly the same dates. Reliance and HDFC Bank ended above their starting prices. TCS and Infosys ended below theirs. We use daily closing observations throughout. These show changes between recorded dates and leave movements within each session unobserved.
+\out{Questions guiding the study}
+How much of each instrument's movement survived in its final price? How much larger was the average loss on the worst days than the loss at the tail cutoff? Finally, if two pricing methods receive the same inputs, how closely do their answers agree?
+\chapterpage{Objectives}
+\subsection{Primary objectives}
+\begin{itemize}
+\item To measure upward and downward price movements and reconstruct net changes using Jordan decomposition.
+\item To explain Riemann and Darboux integration and compare two numerical integration rules against known answers.
+\item To estimate one-day Value at Risk and Expected Shortfall for four Indian shares and the Nifty 50.
+\item To test the Cauchy--Riemann equations and contour identities, and to recover a distribution function using Gil--Pelaez inversion.
+\item To examine harmonic functions and compare Black--Scholes and Carr--Madan values for the same European call.
+\end{itemize}
+\subsection{Secondary objectives}
+\begin{itemize}
+\item To build a common set of trading dates and check that cumulative log returns agree with the change between the first and last prices.
+\item To compare the historical loss estimates with estimates from a fitted normal distribution.
+\item To identify which conclusions depend on the sampling interval, the number of tail observations or the option-pricing assumptions.
+\end{itemize}
+\chapterpage{Literature Review}
+\subsection{Variation and integration}
+Trench develops the Riemann integral through upper and lower sums, providing a criterion for the existence of an integral \cite{trench}. For an increasing function the smallest and largest values on a closed subinterval occur at its endpoints. This construction yields explicit bounds. For example, for $x^2$ on $[0,1]$, the left rectangles lie below the curve and the right rectangles lie above it. Their gap tells us how much uncertainty remains before we know the exact area.
+ 
+The bounded-variation criterion asks a different question about a partition. Here we add the absolute changes in height between successive points. Jordan decomposition \cite{royden} says that a function of bounded variation can be written as the difference of two increasing (in the weak sense) functions. On a daily price grid, the two parts are easy to construct: keep one running total of rises and another of the sizes of falls. The theorem concerns all partitions of an interval. The prices give us one observed partition, so the empirical conclusion concerns that grid alone.
+\subsection{Tail loss and Expected Shortfall}
+Acerbi and Tasche examine the limitations of quantile-based measures of portfolio loss. Two portfolios may have the same cutoff and very different losses beyond it. They develop Expected Shortfall as an average across the worst part of a loss distribution and address how to define that average when observations can tie \cite{acerbi}. This matters for daily records, where the sample is finite. The project states its sample rule explicitly: average the returns at or below the estimated lower quantile, then reverse the sign to express losses.
+ 
+An improper integral gives the continuous version of this calculation. Its value depends on how fast the tail shrinks. A finite quantile alone gives no guarantee that the average beyond it exists. This is one reason the report first checks a distribution with a known tail.
+\topic{Complex functions, inversion and option pricing}
+The Cauchy--Riemann equations connect the real and imaginary parts of a complex function. The treatment in \textit{A First Course in Complex Analysis} shows how a derivative must agree when approached from different directions \cite{complex}. We use conjugation as a comparison case. It is smooth as a two-variable real map, yet the direction of approach changes its complex difference quotient.
+ 
+Gil--Pelaez gave an inversion formula that recovers a distribution function from a characteristic function \cite{gil}. The result provides a computational method for evaluating probabilities. If a model supplies a simple characteristic function, a numerical integral can give the chance of observing a return below a chosen value. A normal distribution makes a clear test because its cumulative probability is available independently. The study also calculates characteristic functions from the observed returns. Those are separate estimates with sampling error.
+ 
+Black and Scholes derived an option-pricing equation by constructing a hedge in the underlying asset and the option \cite{bs}. Under their assumptions, the European call has a closed-form price. It supplies a benchmark with which to test a numerical pricing routine.
+ 
+Carr and Madan showed how damping a call price in log-strike makes a Fourier transform practical \cite{carr}. Their paper uses the fast Fourier transform to price across a grid of strikes. This project needs one at-the-money call and integrates their formula directly by trapezoids. Agreement with Black--Scholes checks the calculation under one common model. Testing either method against traded prices would also require a matching option quote, dividend inputs and a rate for the contract's maturity.
+\out{Relationship between the studies}
+The studies address two distinct sources of uncertainty. Acerbi and Tasche consider what a risk measure captures when a loss distribution is given. Gil--Pelaez considers how to recover probabilities when the distribution is known through its transform. A precise inversion can therefore coexist with an inaccurate estimate of market risk if the assumed distribution gives too little weight to large losses. The project examines both issues by checking inversion against known normal probabilities and comparing normal tail estimates with historical losses.
+
+Black--Scholes and Carr--Madan provide a complementary comparison. Their prices can be evaluated under identical assumptions using different calculations. Agreement isolates numerical consistency. An assessment of pricing accuracy in the market would require observed premiums for matching contracts.
+\chapterpage{Methodology}
+\subsection{A common scale for returns and risk}
+Let $P_t$ be the price on common date $t$. The simple return $R_t$ measures the gain or loss relative to the previous close. The log return $r_t$ makes changes over time additive:
+\[
+ R_t=P_t/P_{t-1}-1,\qquad r_t=\log(P_t/P_{t-1}),\qquad
+ \sum_{t=1}^n r_t=\log(P_n/P_0).
+\]
+The last identity is a check on dates and units. Taking the exponential of the sum and subtracting one gives the full-period simple return. The sample standard deviation of daily log returns, multiplied by $\sqrt{252}$, supplies the reported annualized volatility. One-day loss measures use simple returns so that a loss percentage has a direct interpretation.
+\subsection{Numerical comparisons}
+The mathematical examples each have a reference value. We compare upper and lower rectangles for $x^2$, two quadrature rules for $e^x$, and contour sums for $e^z$. In each case, either the exact answer or a bound is known before running the calculation. We report differences in absolute units.
+ 
+The option comparison uses the last Nifty 50 level as both spot and strike. Both methods receive the same volatility, rate, maturity and zero dividend yield. Fixing those inputs makes the price difference a test of the two implementations. The model price is expressed in index points per unit of underlying.
+\chapterpage{Data Collection}
+\subsection{Dataset description}
+The project stores a Yahoo Finance daily price extract with open, high, low, close, adjusted close and volume. Four series are equity prices in rupees and the fifth is an index in points. The following values are rounded from the project's dataset summary.
+\begin{center}\begin{tabular}{lrrr}\toprule
+Instrument & First price & Last price & Common dates\\\midrule
+Reliance Industries & 1,070.58 & 1,364.60 & 1,236\\
+Tata Consultancy Services & 2,994.15 & 2,398.00 & 1,236\\
+Infosys & 1,511.35 & 1,108.20 & 1,236\\
+HDFC Bank & 709.03 & 835.55 & 1,236\\
+Nifty 50 & 17,416.55 & 25,691.20 & 1,236\\\bottomrule
+\end{tabular}\par\nopagebreak\refstepcounter{table}{\small\itshape Table \thetable: First and last prices on the common trading calendar.}\end{center}
+Daily historical prices were obtained from the following Yahoo Finance pages.
+
+{\small\begin{tabular}{@{}ll@{}}
+Reliance Industries & \url{https://finance.yahoo.com/quote/RELIANCE.NS/history/}\\
+TCS & \url{https://finance.yahoo.com/quote/TCS.NS/history/}\\
+Infosys & \url{https://finance.yahoo.com/quote/INFY.NS/history/}\\
+HDFC Bank & \url{https://finance.yahoo.com/quote/HDFCBANK.NS/history/}\\
+Nifty 50 & \url{https://finance.yahoo.com/quote/%5ENSEI/history/}\\
+\end{tabular}}
+\subsection{Data preprocessing}
+The program sorts dates, removes duplicate timestamps and chooses adjusted closes where available. The raw equity series each had 1,237 available prices. The index had 1,236, with one missing row on the combined calendar. Keeping dates with usable prices for all five instruments removed one equity observation from each series. The remaining 1,236 dates give 1,235 adjacent returns per instrument. A return that spans an excluded date covers the full interval between its two retained closes.
+ 
+Adjusted prices allow the provider's corporate-action adjustments to enter the return calculation. These are historical series as saved in the project. A fresh download may revise earlier values. The stored file is \texttt{outputs/cache/yahoo\_ohlcv.csv}.
+\topic{Exploratory data analysis}
+\fig{normalized_prices_and_log_returns.png}{The common starting scale allows the five price paths to be read together. Daily log returns show the size and sign of successive moves.}
+On a starting scale of 100, the Nifty 50 ended near 147.51, Reliance near 127.46 and Infosys near 73.33. The scale removes differences between share prices and index levels. It preserves the percentage change in each underlying series.
+ 
+The volatility ranking adds information that the end levels miss. Infosys had annualized volatility of 26.44\%, compared with 13.93\% for the index. The next section examines how much movement came from advances and how much came from declines. Later, the loss calculations concentrate on the largest declines.
+\chapterpage{Model Implementation}
+\subsection{Real Analysis I: Monotonicity, bounded variation and Jordan decomposition}
+For adjacent recorded prices, let $\Delta P_t=P_t-P_{t-1}$. A sequence of positive changes gives a strictly increasing run, while negative changes give a decreasing run. Flat days have zero size. Define the nondecreasing totals of rises and falls through day $k$ by
+\[
+ U_k=\sum_{t=1}^k\max(\Delta P_t,0),\qquad
+ D_k=\sum_{t=1}^k\max(-\Delta P_t,0).
+\]
+Then $P_k=P_0+U_k-D_k$, and $U_k+D_k$ is the total variation on the observed grid. For a function on a continuous interval, bounded variation requires the supremum of the corresponding sums over all finite partitions to be finite.
+\begin{center}\small\begin{tabular}{lrrrrr}\toprule
+& Up days & Down days & $U_n$ & $D_n$ & Net change\\\midrule
+Reliance &628&604&8,221.52&7,927.50&294.02\\
+TCS &593&641&19,063.56&19,659.71&$-596.15$\\
+Infosys &607&626&9,981.68&10,384.83&$-403.15$\\
+HDFC Bank &627&605&4,613.05&4,486.53&126.52\\
+Nifty 50 &650&584&87,982.06&79,707.42&8,274.65\\\bottomrule\end{tabular}\par\nopagebreak\refstepcounter{table}{\small\itshape Table \thetable: Directional day counts and gross price changes across instruments.}\end{center}
+Differences use unrounded components. Reliance also had three flat days, so its up, down and flat counts sum to 1,235. Its total variation was 16,149.02 price units. Only 1.82\% of that distance remained as an absolute change between the endpoints. For the index the same ratio was 4.93\%. This ratio permits a comparison across price scales.
+ 
+The project also sampled $\sin x$ on $[0,2\pi]$. Its three successive moves from $0$ to $1$, down to $-1$, and back to $0$ give continuous variation $4$. The grid returned $4.00000000$, with a maximum Jordan reconstruction error of $2.45\times10^{-16}$.
+\clearpage
+\subsubsection*{Daily price direction and the 20-day trend}
+\begin{center}
+\includegraphics[width=\linewidth,height=.70\textheight,keepaspectratio]{monotonic_and_trend_phases.png}
+\par\refstepcounter{figure}{\small\itshape Figure \thefigure: Daily price movements and the direction of the 20-day moving average across the five instruments.}
+\end{center}
+Green line segments mark rising or unchanged closes and red segments mark falls. Background shading shows whether the 20-day moving average rose or fell. A red segment within green shading marks a daily decline during a broader upward trend.
+\topic{Real Analysis II: Riemann and Darboux integration, quadrature and the data pipeline}
+On a partition with widths $\Delta x_j$, write $m_j$ and $M_j$ for the smallest and largest function values (or their infimum and supremum). The Darboux bounds are $L=\sum m_j\Delta x_j$ and $U=\sum M_j\Delta x_j$. A bounded function is Riemann integrable when partitions can make $U-L$ arbitrarily small. For $x^2$ on $[0,1]$, the two sums bracket $1/3$.
+\begin{center}\begin{tabular}{rrrr}\toprule
+Intervals & Lower sum & Upper sum & Gap\\\midrule
+4&0.218750&0.468750&0.250000\\
+16&0.302734&0.365234&0.062500\\
+64&0.325562&0.341187&0.015625\\
+256&0.331383&0.335289&0.003906\\\bottomrule\end{tabular}\par\nopagebreak\refstepcounter{table}{\small\itshape Table \thetable: Lower and upper Darboux sums for $x^2$ on the unit interval.}\end{center}
+For $n$ equal intervals the gap is exactly $1/n$ because the differences of squared endpoints cancel across adjacent intervals. Boundedness alone is insufficient. The indicator of the rationals has lower sum zero and upper sum one on every partition of $[0,1]$.
+ 
+The data pipeline supplies a useful distinction here. Daily returns are observed increments and can be added in log form. A continuous cash flow requires a rate at every time. For an explicitly modelled payment stream of $100e^{-0.02t}$ units per year discounted at 5\%, the five-year present value is
+\[
+ \int_0^5 100 e^{-0.07t}\,dt
+ =\frac{100}{0.07}(1-e^{-0.35})=421.8741575447.
+\]
+The program's Simpson estimate agreed within $5.7\times10^{-14}$ units. This calculation uses the specified payment stream independently of the stock data.
+\topic{Quadrature accuracy}
+The composite trapezoidal rule joins adjacent values with a straight line and sums the areas underneath. Simpson's rule fits a quadratic over each pair of intervals. For equally spaced values $f_j=f(a+jh)$ and even $n$, the formulas are
+\[
+ T_n=h\left(\tfrac12f_0+\sum_{j=1}^{n-1}f_j+\tfrac12 f_n\right),
+ \qquad
+ S_n=\frac h3\left(f_0+4\!\!\sum_{j\text{ odd}}f_j+
+ 2\!\!\sum_{\substack{0<j<n\\j\text{ even}}}f_j+f_n\right).
+\]
+\fig{quadrature_convergence.png}{Absolute errors for the integral of $e^x$ on $[0,1]$, measured against $e-1$.}
+With four intervals the trapezoid error was $8.94\times10^{-3}$ and the Simpson error was $3.70\times10^{-5}$. With eight they fell to $2.24\times10^{-3}$ and $2.33\times10^{-6}$. Halving the spacing cut the errors by factors close to four and sixteen, respectively. This is the expected behaviour for this smooth function. A payoff with a corner or an integral over an infinite tail needs its own accuracy check.
+\topic{Real Analysis III: Improper integrals and tail risk}
+An integral over an infinite interval is defined by a limit. The distinction matters when measuring losses. For example, $\int_1^\infty x^{-2}dx=1$, while $\int_1^b x^{-1}dx=\log b$ grows without bound. At $b=1000$ the latter is only $6.907755$, so a finite numerical answer at a chosen cutoff can hide divergence.
+ 
+For a continuous loss $L=-R$ with density $f_L$, let $v$ be its $\alpha$ quantile. Then
+\[
+ \operatorname{VaR}_{\alpha}=v,\qquad
+ \operatorname{ES}_{\alpha}=\frac{1}{1-\alpha}\int_v^\infty \ell f_L(\ell)\,d\ell ,
+\]
+provided the tail average exists. VaR marks the entry to the worst tail and ES gives the mean loss there. The project checked normal and exponential density masses numerically, obtaining $1.000000$ for each. For a unit-scale Pareto variable of shape three it obtained $\Pr(X>2)=0.125000$, the same as $2^{-3}$.
+\begin{center}\begin{tabular}{lrrrr}\toprule
+&VaR 95\% &ES 95\% &VaR 99\% &ES 99\%\\\midrule
+Reliance&2.12&3.02&3.36&4.48\\
+TCS&2.11&3.27&3.86&4.96\\
+Infosys&2.62&3.81&4.31&6.20\\
+HDFC Bank&2.06&3.11&3.62&5.00\\
+Nifty 50&1.39&2.00&2.27&3.16\\\bottomrule\end{tabular}\par\nopagebreak\refstepcounter{table}{\small\itshape Table \thetable: Historical one-day Value at Risk and Expected Shortfall by instrument.}\end{center}
+For Infosys, the historical 99\% cutoff was a 4.31\% loss. The average across days at or beyond that cutoff was 6.20\%. With 1,235 observations, roughly thirteen days determine the latter figure. Replacing even one large loss can noticeably change that average.
+\topic{Complex Analysis I: Holomorphy, Cauchy--Riemann equations and contours}
+Write $f(x+iy)=u(x,y)+iv(x,y)$. A function is holomorphic on an open set if it is complex differentiable at every point there. Continuous first partial derivatives satisfying $u_x=v_y$ and $u_y=-v_x$ throughout that set give a practical sufficient condition. A numerical residual at a point tests a calculation locally.
+\begin{center}\begin{tabular}{lrl}\toprule
+Function & $|u_x-v_y|+|u_y+v_x|$ & Interpretation\\\midrule
+$e^z$ & $5.00\times10^{-11}$ & roundoff and finite differencing\\
+$z^2$ & $0.00$ & equations agree at this point\\
+$\overline z$ & $2.00$ & first equation fails\\\bottomrule\end{tabular}\par\nopagebreak\refstepcounter{table}{\small\itshape Table \thetable: Cauchy--Riemann residuals at $(0.4,-0.3)$.}\end{center}
+For $\overline z=x-iy$, the first equation would require $1=-1$. The function $|z|^2$ provides a subtler case. At zero its difference quotient has magnitude $|h|$, which tends to zero from any direction. Elsewhere the equations fail. A derivative at the origin therefore establishes less than holomorphy in a surrounding disk.
+ 
+A contour integral sums complex changes along a path. With a counterclockwise unit circle $\Gamma$, Cauchy's theorem and integral formula give
+\[
+ \oint_\Gamma e^z\,dz=0,\qquad
+ \frac{1}{2\pi i}\oint_\Gamma\frac{e^z}{z}\,dz=e^0=1 .
+\]
+Using 20,000 straight segments and their midpoints, the program returned $-8.88\times10^{-16}-5.55\times10^{-16}i$ for the first integral and $1.0000000082$ for the scaled second integral. The factor $1/z$ in the second expression picks out the value of the analytic function at the centre.
+\topic{Gil--Pelaez inversion}
+A characteristic function records the average of a rotating complex number. For a return $X$ it is $\phi(u)=\mathbb E[e^{iuX}]$. The empirical version averages $e^{iu r_t}$ over all observed log returns. At $u=0$ every term equals one. At $u=20$ the Nifty sample gave $0.984849+0.006555i$. A normal distribution fitted to the same mean and standard deviation gave $0.984692+0.006199i$.
+ 
+At a point where the distribution function $F$ is continuous, Gil--Pelaez inversion gives \cite{gil}
+\[
+ F(x)=\tfrac12-\frac1\pi\int_0^\infty
+ \frac{\operatorname{Im}\!\left(e^{-iux}\phi(u)\right)}{u}\,du .
+\]
+The division by $u$ needs care near zero. For the fitted normal model, the numerator behaves like $(\mu-x)u$, which gives the limiting integrand $\mu-x$. Using this limit keeps the expression well defined.
+\begin{center}\begin{tabular}{rrr}\toprule
+Daily log return $x$ & Inverted CDF & Normal CDF\\\midrule
+$-0.01723898$&0.02275013&0.02275013\\
+$-0.00846211$&0.15865525&0.15865525\\
+$0.00031476$&0.50000000&0.50000000\\
+$0.00909163$&0.84134475&0.84134475\\
+$0.01786850$&0.97724987&0.97724987\\\bottomrule\end{tabular}\par\nopagebreak\refstepcounter{table}{\small\itshape Table \thetable: Gil--Pelaez inversion and reference probabilities for the fitted normal model.}\end{center}
+At the fitted mean the inversion returned one half, as symmetry predicts. Agreement at the other points checks the sign and scaling of the numerical integral. Whether the fitted normal law captures actual losses is a separate empirical question, examined in Section~\ref{res}.
+\topic{Complex Analysis II and derivatives: Harmonic functions and the Black--Scholes PDE}
+A twice differentiable function is harmonic when $u_{xx}+u_{yy}=0$. For $u=x^2-y^2$, the two terms are $2$ and $-2$. Its harmonic conjugate $v=2xy$ is the imaginary part of $z^2$. At $(0.4,-0.3)$ the numerical Laplacians were $0.00$ and $-5.55\times10^{-9}$. For comparison, $w=x^3$ gave $2.40$, matching $6x$. On a circle of radius $0.8$ about the origin, the mean of $u$ was $-1.77\times10^{-17}$, agreeing with its centre value of zero.
+ 
+An option evolves in time as well as with price. For a European claim with no dividends, the Black--Scholes equation is \cite{bs}
+\[
+ V_t+\tfrac12\sigma^2 S^2V_{SS}+rSV_S-rV=0,\qquad
+ C(S,T)=\max(S-K,0).
+\]
+The terminal condition specifies what the call pays at expiry. The second derivative measures how rapidly its sensitivity to the underlying changes. Unlike Laplace's equation, this time-dependent PDE becomes a heat equation after a change of variables. The project evaluates its closed-form solution.
+With $S=K=25{,}691.1992$, annual $\sigma=0.1393285$, continuously compounded $r=0.06$ and $T=1$, the call was $2{,}259.64035$ and the put was $763.50138$. Their difference of $1{,}496.13897$ equals $S-Ke^{-rT}$ to the displayed precision. This put--call parity check ties the two prices to the same inputs.\par\nopagebreak{\centering\small\itshape Output 1: Black--Scholes call and put prices and the put--call parity check.\par}
+ 
+The call delta was $0.69157$. For a small one-point increase in the index, the model therefore predicts about $0.69$ points of extra call value with other inputs fixed. Historical volatility is used here as a model input. A traded contract could carry a different implied volatility.
+\topic{Carr--Madan pricing and sensitivity}
+Take $k=\log K$ and let $\phi_T$ be the risk-neutral characteristic function of $\log S_T$. Carr and Madan damp the call price by using a positive parameter $\alpha$ \cite{carr}. For the lognormal model the required moment exists, and the call is
+\begin{align*}
+ \psi(v)&=\frac{e^{-rT}\phi_T(v-i(\alpha+1))}
+ {\alpha^2+\alpha-v^2+i(2\alpha+1)v},\\
+ C(k)&=\frac{e^{-\alpha k}}{\pi}\int_0^\infty
+ \operatorname{Re}\!\left(e^{-ivk}\psi(v)\right)\,dv .
+\end{align*}
+The shift into the complex plane is part of the pricing formula. The input here describes future log prices under the pricing model. The empirical characteristic function in the preceding analysis describes past daily log returns.
+The project used $\alpha=1.5$, a maximum frequency of 150 and 30,000 trapezoids. It returned $2{,}259.64034787$ points. The Black--Scholes formula returned $2{,}259.64034787$ as well. The difference before rounding was about $1.5\times10^{-11}$ points.\par\nopagebreak{\centering\small\itshape Output 2: Carr--Madan and Black--Scholes values for the same European call.\par}
+\fig{black_scholes_sensitivity.png}{Model prices as individual assumptions change. The quoted call and put use the at-the-money inputs on the preceding page.}
+\chapterpage{Results and Analysis}\label{res}
+\subsection{Market outputs}
+\begin{center}\small\begin{tabular}{lrrrr}\toprule
+&Period return&Annual vol.&Historical ES 99\%&Normal ES 99\%\\\midrule
+Reliance&27.46\%&22.73\%&4.48\%&3.80\%\\
+TCS&$-19.91$\%&22.94\%&4.96\%&3.86\%\\
+Infosys&$-26.67$\%&26.44\%&6.20\%&4.44\%\\
+HDFC Bank&17.84\%&21.26\%&5.00\%&3.54\%\\
+Nifty 50&47.51\%&13.93\%&3.16\%&2.30\%\\\bottomrule\end{tabular}\par\nopagebreak\refstepcounter{table}{\small\itshape Table \thetable: Period returns, annualized volatility and one-day 99\% Expected Shortfall.}\end{center}
+For the normal comparison, if simple daily returns have fitted mean $\mu$ and standard deviation $s$, their 99\% Expected Shortfall in loss units is $-\mu+s\varphi(z)/0.01$, where $z=\Phi^{-1}(0.01)$ and $\varphi$ is the standard normal density. Historical and normal ES therefore use the same return units and horizon.
+\subsection{Key findings}
+The historical 99\% ES exceeded its normal estimate for every instrument. The largest gap was for Infosys, about 1.76 percentage points. HDFC Bank was less volatile than TCS across all days, yet its historical 99\% ES was slightly higher. The ranking by the spread of all returns can therefore differ from the ranking by the mean of the worst observations.
+ 
+The index had the lowest annual volatility and historical tail loss in this five-series comparison. Explaining how much came from diversification would require the index weights and constituent returns. The four selected shares alone cannot answer that question.
+\topic{Return distributions and extreme observations}
+\fig{return_distributions.png}{Daily log-return distributions for the five instruments. The centre describes ordinary trading days, while the tails contain the observations that drive extreme-loss estimates.}
+\begin{center}\small\begin{tabular}{lrrr}\toprule
+Instrument & Lowest log return & Highest log return & Excess kurtosis\\\midrule
+Reliance & $-7.78$\% & 10.97\% & 5.04\\
+TCS & $-8.76$\% & 6.57\% & 3.54\\
+Infosys & $-9.90$\% & 7.63\% & 3.49\\
+HDFC Bank & $-8.81$\% & 9.54\% & 5.24\\
+Nifty 50 & $-6.11$\% & 3.75\% & 3.88\\\bottomrule
+\end{tabular}\par\nopagebreak\refstepcounter{table}{\small\itshape Table \thetable: Extreme daily log returns and excess kurtosis by instrument.}\end{center}
+All five samples had positive excess kurtosis. HDFC Bank recorded the highest value, although Infosys recorded the largest single log loss. Kurtosis responds to extreme observations on both sides and measures their size relative to the series' own spread. The worst daily return answers a narrower question about one observation.
+\topic{Variation across sampling intervals}
+\fig{quadratic_variation_examples.png}{Total and quadratic variation for a straight line and for simulated Gaussian increments over a unit interval.}
+For the straight line $f(t)=t$, dividing the interval into $n$ equal pieces gives total variation one and quadratic variation $1/n$. Increasing the number of intervals from 64 to 4,096 reduced the observed quadratic sum from 0.015625 to 0.000244. For the simulated increments, total variation rose from 7.45 to 50.95 while the quadratic sum changed from 1.344 to 0.994. Each simulation uses increments with variance $1/n$, so the expected sum of their squares is one at either resolution.
+ 
+This example explains a limitation of the equity comparison. Daily observations capture changes between closes. A finer partition can reveal reversals within those intervals and increase measured total variation. The simulated values illustrate this dependence on the grid and do not estimate intraday variation for the five instruments.
+\topic{Practical implications and limits}
+\fig{daily_risk_measures.png}{The project's one-day risk comparisons. Tail cutoffs and tail averages are shown separately.}
+A reader comparing Infosys with the index might first notice the difference in period returns. For someone concerned about a large one-day loss, the historical 99\% ES figures of 6.20\% and 3.16\% answer a more specific question. The result is sensitive to which thirteen or so dates enter the tail. It also omits losses and recoveries that took place between closes.
+ 
+The numerical tests have a different use. They would help identify a sign mistake in the inversion formula or a discounting error in the option formula. Passing those tests gives confidence that the code computes the stated model. The remaining uncertainty concerns the inputs and assumptions: a year of constant volatility, a flat rate and zero dividends simplify the example substantially.
+\chapterpage{Conclusion}
+The Nifty 50 gained 8,274.65 points between the first and last observations. Adding every observed rise and fall in absolute size gave 167,689.48 points. Jordan decomposition reconciles those two numbers: the index accumulated 87,982.06 points of rises and gave back 79,707.42 points in falls. That distinction is the clearest reason to keep the daily path when studying a five-year return.
+ 
+The choice of risk measure also changed what the data showed. The Infosys 99\% loss cutoff was 4.31\%, while the average loss on days beyond it reached 6.20\%. Across all five series the historical tail average exceeded the normal-model estimate at that level. These are statements about the retained sample and its most extreme days.
+ 
+The mathematical examples gave answers that could be checked separately from the market observations. Darboux bounds closed around a known area. Gil--Pelaez inversion recovered known normal probabilities. The Carr--Madan integral and the Black--Scholes formula returned the same call value to eight decimal places under shared inputs.
+\chapterpage{Future Work}
+A follow-up study could calculate each day's 95\% VaR using only the preceding trading year and count breaches over the next year. This would give an out-of-sample check and show whether breaches cluster in time. For 99\% ES, a longer history and an uncertainty interval would help show how much a few large losses influence the estimate.
+ 
+A second extension would match a traded Nifty call to the spot, strike and expiry of the model, then introduce the relevant dividend yield and market rate. Comparing the observed premium with the model price would address a different question from agreement between two numerical methods.
+A further test would repeat the variation analysis using weekly closes drawn from the same dates. Keeping the first and last observations fixed would preserve the net return. Comparing daily and weekly variation would then measure how much movement disappears when intermediate reversals are omitted. Reporting this difference for each instrument would make the effect of sampling frequency directly observable.
+\chapterpage{References}
+\begingroup
+\renewcommand{\section}[2]{}
+\begin{thebibliography}{99}
+\bibitem{trench} William F. Trench. \textit{Introduction to Real Analysis}. Pearson, 2003. Free edition, Trinity University. \href{https://ramanujan.math.trinity.edu/wtrench/texts/trench_real_analysis.pdf}{University edition}.
+\bibitem{complex} Matthias Beck, Gerald Marchesi, Dennis Pixton and Lucas Sabalka. \textit{A First Course in Complex Analysis}. \href{https://matthbeck.github.io/complex.html}{Authors' textbook page}.
+\bibitem{acerbi} Carlo Acerbi and Dirk Tasche. ``On the coherence of expected shortfall.'' \textit{Journal of Banking \& Finance} 26 (2002), 1487--1503. \href{https://arxiv.org/abs/cond-mat/0104295}{Authors' paper}.
+\bibitem{gil} J. Gil-Pelaez. ``Note on the inversion theorem.'' \textit{Biometrika} 38 (1951), 481--482. \href{https://doi.org/10.1093/biomet/38.3-4.481}{Publisher record}.
+\bibitem{bs} Fischer Black and Myron Scholes. ``The pricing of options and corporate liabilities.'' \textit{Journal of Political Economy} 81 (1973), 637--654. \href{https://doi.org/10.1086/260062}{Publisher record}.
+\bibitem{carr} Peter Carr and Dilip B. Madan. ``Option valuation using the fast Fourier transform.'' \textit{Journal of Computational Finance} 2(4) (1999), 61--73. \href{https://wwwf.imperial.ac.uk/~ajacquie/IC_Num_Methods/IC_Num_Methods_Docs/Literature/CarrMadan.pdf}{Full paper}.
+\bibitem{royden} H. L. Royden and P. M. Fitzpatrick (2010). \textit{Real Analysis}, 4th ed. New Delhi: Pearson.
+\bibitem{data0} Yahoo Finance. Reliance Industries. Historical daily prices. \url{https://finance.yahoo.com/quote/RELIANCE.NS/history/}.
+\bibitem{data1} Yahoo Finance. TCS. Historical daily prices. \url{https://finance.yahoo.com/quote/TCS.NS/history/}.
+\bibitem{data2} Yahoo Finance. Infosys. Historical daily prices. \url{https://finance.yahoo.com/quote/INFY.NS/history/}.
+\bibitem{data3} Yahoo Finance. HDFC Bank. Historical daily prices. \url{https://finance.yahoo.com/quote/HDFCBANK.NS/history/}.
+\bibitem{data4} Yahoo Finance. Nifty 50. Historical daily prices. \url{https://finance.yahoo.com/quote/%5ENSEI/history/}.
+\end{thebibliography}\endgroup
+\end{document}

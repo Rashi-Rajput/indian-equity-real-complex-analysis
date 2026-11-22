@@ -1,0 +1,6 @@
+"""Shared analysis configuration."""
+
+TICKERS = ["RELIANCE.NS", "TCS.NS", "INFY.NS", "HDFCBANK.NS", "^NSEI"]
+TRADING_DAYS = 252
+RISK_FREE_RATE = 0.06
+CONFIDENCE_LEVELS = (0.95, 0.99)

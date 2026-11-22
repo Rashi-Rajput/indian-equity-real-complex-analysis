@@ -1,0 +1,8 @@
+/output/
+/outputs/
+/.venv/
+/.vscode/
+__pycache__/
+*.pyc
+/Equity_Analysis.pdf
+/Equity_Analysis_LaTeX.zip
